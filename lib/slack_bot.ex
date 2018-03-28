@@ -31,6 +31,9 @@ defmodule Snapeth.SlackBot do
 
   def snaps(message, slack, state) do
     IO.puts("I got to snaps method")
+    [_, user_id] = Regex.run(~r/^<@(\w+)>/, message.text)
+    IO.puts user_id
+    send_message("Oh snapeth, you got a snap!", user_id, slack) |> IO.inspect
   end
 
 end
