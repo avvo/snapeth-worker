@@ -6,6 +6,8 @@ defmodule Snapeth.SlackBot do
       {~r/^<@\w+>/, :snaps}
     ]
 
+  # @delay
+
   def handle_connect(_, _state) do
     IO.puts("Slack bot connected to team Avvo")
     {:ok, %{}}
@@ -33,7 +35,22 @@ defmodule Snapeth.SlackBot do
   def snaps(message, slack, state) do
     [_, user_id] = Regex.run(~r/^<@(\w+)>/, message.text)
     send_message("Oh snapeth, you got a snap from <@#{message.user}>!", user_id, slack)
-    Map.update(state, user_id, 1, &(&1 + 1))
+    state = Map.update(state, user_id, 1, &(&1 + 1))
+    snaps_leaderboard(slack, state)
+    state
+  end
+
+  def snaps_leaderboard(slack, state) do
+    leaderboard = state
+    |> Enum.sort_by(&(elem(&1, 1)))
+    |> Enum.reverse()
+    |> Enum.map(fn {user, snap_count} ->
+      "<@#{user}> received #{snap_count}!"
+    end)
+    |> Enum.join("\n")
+
+    # see if we can't tag snapeth in here by handle
+    send_message("Here is the daily leaderboard for snap recipients!\n#{leaderboard}", "#testing-stuff", slack)
   end
 
 end
