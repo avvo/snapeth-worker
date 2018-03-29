@@ -20,12 +20,14 @@ defmodule Snapeth do
   end
 
   def handle_info(:work, state) do
+    send(state.slack, :display_leaderboard)
     schedule_work()
     {:noreply, state}
   end
 
   defp schedule_work() do
-    Process.send_after(self(), :work, 10000)
+    Process.send_after(self(), :work, 5000)
+    # fix this to not be 10 secs
   end
 
 end
