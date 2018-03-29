@@ -6,9 +6,9 @@ defmodule Snapeth.SlackBot do
       {~r/^<@\w+>/, :snaps}
     ]
 
-  def handle_connect(_, state) do
+  def handle_connect(_, _state) do
     IO.puts("Slack bot connected to team Avvo")
-    {:ok, state}
+    {:ok, %{}}
   end
 
   def handle_event(message = %{channel: "D" <> _, type: "message"}, slack, state) do
@@ -17,7 +17,7 @@ defmodule Snapeth.SlackBot do
                           fn {reg, _} -> String.match?(message.text, reg) end
                          )
                          IO.inspect func
-    Kernel.apply(Snapeth.SlackBot, func, [message, slack])
+    state = Kernel.apply(Snapeth.SlackBot, func, [message, slack, state])
     {:ok, state}
   end
 
@@ -25,13 +25,15 @@ defmodule Snapeth.SlackBot do
     {:ok, state}
   end
 
-  def help(message, slack) do
+  def help(message, slack, state) do
     send_message("Hi! To give snaps, start by tagging a team member and we'll instruct you from there. For example: @slackbot", message.channel, slack)
+    state
   end
 
-  def snaps(message, slack) do
+  def snaps(message, slack, state) do
     [_, user_id] = Regex.run(~r/^<@(\w+)>/, message.text)
     send_message("Oh snapeth, you got a snap from <@#{message.user}>!", user_id, slack)
+    Map.update(state, user_id, 1, &(&1 + 1))
   end
 
 end
