@@ -14,7 +14,18 @@ defmodule Snapeth do
   end
 
   def init(_team_id) do
-    Slack.Bot.start_link(Snapeth.SlackBot, [], Application.get_env(:snapeth, :slack_bot_token))
+    schedule_work()
+    {:ok, pid} = Slack.Bot.start_link(Snapeth.SlackBot, [], Application.get_env(:snapeth, :slack_bot_token))
+    {:ok, %{slack: pid}}
+  end
+
+  def handle_info(:work, state) do
+    schedule_work()
+    {:noreply, state}
+  end
+
+  defp schedule_work() do
+    Process.send_after(self(), :work, 10000)
   end
 
 end

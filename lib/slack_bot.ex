@@ -6,8 +6,6 @@ defmodule Snapeth.SlackBot do
       {~r/^<@\w+>/, :snaps}
     ]
 
-  # @delay
-
   def handle_connect(_, _state) do
     IO.puts("Slack bot connected to team Avvo")
     {:ok, %{}}

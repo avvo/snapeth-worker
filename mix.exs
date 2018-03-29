@@ -28,9 +28,9 @@ defmodule Worker.MixProject do
   defp deps do
     [
       {:distillery, "~> 1.5"},
+      {:mox, "~> 0.3", only: :test},
       {:poison, "~> 3.1"},
       {:slack, "~> 0.13"},
-      {:mox, "~> 0.3", only: :test}
     ]
   end
 end
