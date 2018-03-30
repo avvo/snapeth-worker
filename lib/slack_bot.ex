@@ -3,7 +3,8 @@ defmodule Snapeth.SlackBot do
 
   @message_types [
       {~r/help/i, :help},
-      {~r/^<@\w+>/, :snap}
+      {~r/^<@\w+>/, :snap},
+      {~r/leaderboard/i, :leaderboard},
     ]
 
   def handle_connect(_, _state) do
@@ -12,7 +13,7 @@ defmodule Snapeth.SlackBot do
   end
 
   def handle_info(:display_leaderboard, slack, state) do
-    snaps_leaderboard(slack, state)
+    snaps_leaderboard(slack, state, "#general")
     {:ok, %{}}
   end
 
@@ -41,11 +42,16 @@ defmodule Snapeth.SlackBot do
     Map.update(state, user_id, 1, &(&1 + 1))
   end
 
-  def snaps_leaderboard(slack, state) when map_size(state) == 0 do
-    send_message("There have been no snaps today from <@#{slack.me.id}>.", "#testing-stuff", slack)
+  def leaderboard(message, slack, state) do
+    snaps_leaderboard(slack, state, message.channel)
+    state
   end
 
-  def snaps_leaderboard(slack, state) do
+  def snaps_leaderboard(slack, state, channel) when map_size(state) == 0 do
+    send_message("There have been no snaps today from <@#{slack.me.id}>.", channel, slack)
+  end
+
+  def snaps_leaderboard(slack, state, channel) do
     leaderboard = state
     |> Enum.sort_by(&(elem(&1, 1)))
     |> Enum.reverse()
@@ -54,7 +60,7 @@ defmodule Snapeth.SlackBot do
     end)
     |> Enum.join("\n")
 
-    send_message("Here is the daily leaderboard for <@#{slack.me.id}> recipients!\n#{leaderboard}", "#testing-stuff", slack)
+    send_message("Here is the daily leaderboard for <@#{slack.me.id}> recipients!\n#{leaderboard}", channel, slack)
   end
 
 end

@@ -31,6 +31,7 @@ defmodule Worker.MixProject do
       {:mox, "~> 0.3", only: :test},
       {:poison, "~> 3.1"},
       {:slack, "~> 0.13"},
+      {:timex, "~> 3.1"},
     ]
   end
 end
