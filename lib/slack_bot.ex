@@ -38,6 +38,15 @@ defmodule Snapeth.SlackBot do
 
   def snap(message, slack, state) do
     [_, user_id] = Regex.run(~r/^<@(\w+)>/, message.text)
+    snap(message, slack, state, user_id)
+  end
+
+  def snap(message = %{user: user}, slack, state, user_id) when user_id == user do
+    send_message("You can't snap yourself, but this is an opportunity to talk with your teammates about inclusive behaviors and being proactive with their snaps!", message.channel, slack)
+    state
+  end
+
+  def snap(message, slack, state, user_id) do
     send_message("Oh snapeth, you got a snap from <@#{message.user}>!", user_id, slack)
     Map.update(state, user_id, 1, &(&1 + 1))
   end
