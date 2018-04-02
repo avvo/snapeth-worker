@@ -1,0 +1,12 @@
+---
+service_name: snapeth
+image: avvo/snapeth
+facing: backend
+env_on: start
+health_check: false
+start_before_stop: false
+routing:
+  path: /
+  port: 4186
+  protocol: http
+  subdomain: snapeth
