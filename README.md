@@ -1,6 +1,10 @@
 # Snapeth
 
-**TODO: Add description**
+Have you witnessed a teammate or coworker doing something inclusive?
+
+Would you like to be able to snap your fingers in agreement to promote and reinforce those positive behaviors?
+
+Snapeth is currently an MVP Avvo Hackathon project in Slack.
 
 ## Installation
 
@@ -18,4 +22,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/snapeth](https://hexdocs.pm/snapeth).
-
