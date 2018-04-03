@@ -14,7 +14,7 @@ defmodule Worker.MixProject do
 
   def application do
     [
-      extra_applications: [:logger, :runtime_tools, :observer, :wx],
+      extra_applications: [:honeybadger, :logger, :runtime_tools, :observer, :wx],
       mod: {Snapeth.Application, []}
     ]
   end
@@ -28,6 +28,7 @@ defmodule Worker.MixProject do
   defp deps do
     [
       {:distillery, "~> 1.5"},
+      {:honeybadger, "~> 0.1"},
       {:mox, "~> 0.3", only: :test},
       {:poison, "~> 3.1"},
       {:slack, "~> 0.13"},
