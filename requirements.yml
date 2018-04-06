@@ -1,6 +1,6 @@
 ---
 service_name: snapeth
-image: avvo/snapeth
+image: avvo/snapeth-worker
 facing: backend
 env_on: start
 health_check: false
