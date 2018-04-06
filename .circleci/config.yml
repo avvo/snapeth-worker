@@ -1,0 +1,38 @@
+version: 2
+jobs:
+  build:
+    working_directory: /opt/app/snapeth-worker
+
+    docker:
+      - image: avvo/elixir-circleci:1.4.5-1g
+
+    steps:
+      - checkout
+
+      # all steps after this run in the remote environment
+      - type: setup-docker-engine
+        reusable: true
+        version: 17.05.0-ce
+
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.05.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+
+      - run:
+          name: Build docker image and publish container tagged with branch
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker build -t avvo/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 .
+            docker push avvo/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+
+workflows:
+  version: 2
+  build:
+    jobs:
+    - build:
+        context: org-global
