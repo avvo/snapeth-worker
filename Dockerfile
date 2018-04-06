@@ -1,6 +1,7 @@
-FROM avvo/elixir-circleci:1.4.5-1g
+FROM avvo/elixir-circleci:1.5.2-1c
 
 ENV MIX_ENV=prod
+WORKDIR /opt/app
 
 RUN \
   mkdir -p \
@@ -10,19 +11,8 @@ RUN \
 # Cache elixir deps
 COPY mix.exs mix.lock ./
 COPY config ./config
-COPY deps ./deps
-
 RUN mix do deps.get, deps.compile
 
+# Compile source files
 COPY . .
-
-WORKDIR assets
-
-RUN npm install
-
-RUN ./node_modules/brunch/bin/brunch b -p
-
-WORKDIR /opt/app
-RUN mix phx.digest
-
 RUN mix release --env=prod --verbose
