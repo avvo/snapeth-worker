@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: /opt/app
+    working_directory: /opt/app/snapeth-worker
 
     docker:
       - image: avvo/elixir-circleci:1.5.2-1c

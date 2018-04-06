@@ -1,7 +1,7 @@
 FROM avvo/elixir-circleci:1.5.2-1c
 
 ENV MIX_ENV=prod
-WORKDIR /opt/app
+WORKDIR /opt/app/snapeth-worker
 
 RUN \
   mkdir -p \
