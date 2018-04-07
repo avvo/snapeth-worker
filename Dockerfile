@@ -17,3 +17,4 @@ RUN mix do deps.get, deps.compile
 # Compile source files
 COPY . .
 RUN mix release --env=prod --verbose
+CMD /opt/app/snapeth-worker/_build/prod/rel/snapeth/bin/snapeth foreground
