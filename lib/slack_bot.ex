@@ -32,7 +32,7 @@ defmodule Snapeth.SlackBot do
   end
 
   def help(message, slack, state) do
-    send_message("Hi! To give snaps, start by tagging a team member and we'll instruct you from there. For example: @slackbot", message.channel, slack)
+    send_message("Have you seen someone demonstrate a positive and inclusive behavior at work? Tag that teammate here to give them an appreciative snap!\nFor example: @slackbot", message.channel, slack)
     state
   end
 
