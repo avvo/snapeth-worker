@@ -69,7 +69,7 @@ defmodule Snapeth.SlackBot do
     end)
     |> Enum.join("\n")
 
-    send_message("Here is the daily leaderboard for <@#{slack.me.id}> recipients!\n#{leaderboard}", channel, slack)
+    send_message("Here is the weekly leaderboard for <@#{slack.me.id}> recipients!\n#{leaderboard}", channel, slack)
   end
 
 end
