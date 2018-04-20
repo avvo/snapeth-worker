@@ -14,7 +14,7 @@ defmodule Snapeth.SlackBot do
 
   def handle_info(:display_leaderboard, slack, state) do
     snaps_leaderboard(slack, state, "#general")
-    {:ok, %{}}
+    {:ok, state}
   end
 
   def handle_event(message = %{channel: "D" <> _, type: "message"}, slack, state) do
