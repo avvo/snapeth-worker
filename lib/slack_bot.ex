@@ -17,6 +17,10 @@ defmodule Snapeth.SlackBot do
     {:ok, state}
   end
 
+  def handle_event(message = %{user: user}, %{me: %{id: id}}, state) when user == id do
+    {:ok, state}
+  end
+
   def handle_event(message = %{channel: "D" <> _, type: "message"}, slack, state) do
     {_, func} = Enum.find(@message_types,
                           {nil, :help},
@@ -39,7 +43,6 @@ defmodule Snapeth.SlackBot do
   def snap(message, slack, state) do
     [_, user_id] = Regex.run(~r/^<@(\w+)>/, message.text)
     snap(message, slack, state, user_id)
-    |> IO.inspect
   end
 
   def snap(message = %{user: user}, slack, state, user_id) when user_id == user do
@@ -49,7 +52,6 @@ defmodule Snapeth.SlackBot do
 
   def snap(message, slack, state, user_id) do
     send_message("Oh snapeth, you got a snap from <@#{message.user}>!", user_id, slack)
-    |> IO.inspect
     Map.update(state, user_id, 1, &(&1 + 1))
   end
 
