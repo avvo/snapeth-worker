@@ -12,9 +12,9 @@ defmodule Snapeth.SlackBot do
     {:ok, %{}}
   end
 
-  def handle_info(:display_leaderboard, slack, state) do
-    snaps_leaderboard(slack, state, "#general")
-    {:ok, state}
+  def handle_info(:weekly_leaderboard, slack, state) do
+    display_leaderboard(slack, state, "#general")
+    {:ok, %{}}
   end
 
   def handle_event(message = %{user: user}, %{me: %{id: id}}, state) when user == id do
@@ -56,15 +56,15 @@ defmodule Snapeth.SlackBot do
   end
 
   def leaderboard(message, slack, state) do
-    snaps_leaderboard(slack, state, message.channel)
+    display_leaderboard(slack, state, message.channel)
     state
   end
 
-  def snaps_leaderboard(slack, state, channel) when map_size(state) == 0 do
+  def display_leaderboard(slack, state, channel) when map_size(state) == 0 do
     send_message("There have been no snaps today from <@#{slack.me.id}>.", channel, slack)
   end
 
-  def snaps_leaderboard(slack, state, channel) do
+  def display_leaderboard(slack, state, channel) do
     leaderboard = state
     |> Enum.sort_by(&(elem(&1, 1)))
     |> Enum.reverse()

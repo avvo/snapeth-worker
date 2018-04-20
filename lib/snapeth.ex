@@ -20,7 +20,7 @@ defmodule Snapeth do
   end
 
   def handle_info(:work, state) do
-    send(state.slack, :display_leaderboard)
+    send(state.slack, :weekly_leaderboard)
     schedule_work()
     {:noreply, state}
   end
