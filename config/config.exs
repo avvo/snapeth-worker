@@ -25,13 +25,13 @@ config :logger,
   level: :debug
 
 config :snapeth, Snapeth.Scheduler,
-jobs: [
-  # Every Monday at 2:00
-  {"0 14 * * MON",      {Snapeth, :display_leaderboard, []}},
-  # Every Friday at 2:00
-  {"0 14 * * FRI",      {Snapeth, :display_leaderboard, []}},
-],
-timezone: "America/Los_Angeles"
+  jobs: [
+    # Every Monday at 2:00
+    {"0 14 * * MON",      {Snapeth, :display_leaderboard, []}},
+    # Every Friday at 2:00
+    {"0 14 * * FRI",      {Snapeth, :display_leaderboard, []}},
+  ],
+  timezone: "America/Los_Angeles"
 
 config :snapeth,
   slack_bot_token: "${BOT_TOKEN}"
