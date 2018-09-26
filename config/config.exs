@@ -34,7 +34,7 @@ jobs: [
 timezone: "America/Los_Angeles"
 
 config :snapeth,
-  slack_bot_token: System.get_env("BOT_TOKEN")
+  slack_bot_token: "${BOT_TOKEN}"
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
