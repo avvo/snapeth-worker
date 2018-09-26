@@ -4,7 +4,7 @@ Have you witnessed a teammate or coworker doing something inclusive?
 
 Would you like to be able to snap your fingers in agreement to promote and reinforce those positive behaviors?
 
-Snapeth is currently an MVP Avvo Hackathon project in Slack.
+Snapeth originated as an Avvo Hackathon project and is GOOD TO GO.
 
 ## Installation
 

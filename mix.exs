@@ -29,10 +29,10 @@ defmodule Worker.MixProject do
     [
       {:distillery, "~> 1.5"},
       {:honeybadger, "~> 0.1"},
-      {:mox, "~> 0.3", only: :test},
-      {:poison, "~> 3.1"},
-      {:slack, "~> 0.13"},
-      {:timex, "~> 3.1"},
+      {:mox, "~> 0.4.0", only: :test},
+      {:poison, "~> 3.0"},
+      {:slack, "~> 0.15"},
+      {:timex, "~> 3.4.1"},
     ]
   end
 end
