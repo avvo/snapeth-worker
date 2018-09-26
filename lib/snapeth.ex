@@ -14,6 +14,7 @@ defmodule Snapeth do
   end
 
   def init(_team_id) do
+    IO.puts "Running with token #{Application.get_env(:snapeth, :slack_bot_token)}"
     {:ok, pid} = Slack.Bot.start_link(Snapeth.SlackBot, [], Application.get_env(:snapeth, :slack_bot_token))
     {:ok, %{slack: pid}}
   end
