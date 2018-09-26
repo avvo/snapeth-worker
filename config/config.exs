@@ -21,6 +21,16 @@ use Mix.Config
 #     config :logger, level: :info
 #
 
+config :logger,
+  level: :debug
+
+config :snapeth, Snapeth.Scheduler,
+jobs: [
+  # Every minute
+  {"0 14 * * WED",      {Snapeth, :display_leaderboard, []}},
+],
+timezone: "America/Los_Angeles"
+
 config :snapeth,
   slack_bot_token: System.get_env("BOT_TOKEN")
 

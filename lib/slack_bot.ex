@@ -70,7 +70,7 @@ defmodule Snapeth.SlackBot do
     send_message("Here is the weekly leaderboard for <@#{slack.me.id}> recipients!\n#{leaderboard}", channel, slack)
   end
 
-  defp add_snap_reason(message \\ "", reason) do
+  defp add_snap_reason(message, reason) do
     message <> "\n_#{reason}_"
   end
 

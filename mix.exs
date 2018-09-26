@@ -31,6 +31,7 @@ defmodule Worker.MixProject do
       {:honeybadger, "~> 0.1"},
       {:mox, "~> 0.4.0", only: :test},
       {:poison, "~> 3.0"},
+      {:quantum, "~> 2.3"},
       {:slack, "~> 0.15"},
       {:timex, "~> 3.4.1"},
     ]
