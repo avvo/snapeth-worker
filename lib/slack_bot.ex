@@ -111,16 +111,19 @@ defmodule Snapeth.SlackBot do
     {:ok, Map.put(state, user_id, score)}
   end
 
-  def handle_info(:leaderboard, slack, state) do
+  def handle_info(:weekly_leaderboard, slack, state) do
     display_leaderboard(slack, state, "#general")
 
-    # This is the leaderboard for all time
     {:ok, state}
   end
 
   def handle_info(:persist_leaderboard, _slack, state) do
     Storage.persist_leaderboard(state)
     {:ok, state}
+  end
+
+  def handle_info(:clear_leaderboard, _slack, _state) do
+    {:ok, %{}}
   end
 
   def handle_event(%{user: user}, %{me: %{id: id}}, state) when user == id do

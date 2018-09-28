@@ -28,8 +28,9 @@ config :snapeth, Snapeth.Scheduler,
   jobs: [
     # Every Monday at 2:00
     {"0 14 * * MON",      {Snapeth, :display_leaderboard, []}},
-    # Every Friday at 2:00
-    {"0 14 * * FRI",      {Snapeth, :display_leaderboard, []}},
+    # Every Monday at 2:01
+    {"25 11 * * FRI",      {Snapeth, :clear_leaderboard, []}},
+    #
   ],
   timezone: "America/Los_Angeles"
 

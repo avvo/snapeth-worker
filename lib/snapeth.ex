@@ -11,6 +11,11 @@ defmodule Snapeth do
     send(SnapethMain, :work)
   end
 
+  def clear_leaderboard() do
+    Storage.clear_leaderboard()
+    send(SnapethMain, :clear_leaderboard)
+  end
+
 
   ##########
   # SERVER #
@@ -47,7 +52,12 @@ defmodule Snapeth do
   end
 
   def handle_info(:work, state) do
-    send(state.slack, :leaderboard)
+    send(state.slack, :weekly_leaderboard)
+    {:noreply, state}
+  end
+
+  def handle_info(:clear_leaderboard, state) do
+    send(state.slack, :clear_leaderboard)
     {:noreply, state}
   end
 

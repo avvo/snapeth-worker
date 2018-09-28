@@ -25,6 +25,12 @@ defmodule Snapeth.Storage do
     end
   end
 
+  def clear_leaderboard() do
+    persist_leaderboard(%{})
+
+    %{}
+  end
+
   def create_leaderboard_file() do
     persist_leaderboard(%{})
 
