@@ -29,13 +29,13 @@ config :snapeth, Snapeth.Scheduler,
     # Every Monday at 2:00
     {"0 14 * * MON",      {Snapeth, :display_leaderboard, []}},
     # Every Monday at 2:01
-    {"25 11 * * FRI",      {Snapeth, :clear_leaderboard, []}},
+    {"1 14 * * MON",      {Snapeth, :clear_leaderboard, []}},
     #
   ],
   timezone: "America/Los_Angeles"
 
 config :snapeth,
-  slack_bot_token: System.get_env("BOT_TOKEN") || "${BOT_TOKEN}",
+  slack_bot_token: "${BOT_TOKEN}",
   bucket_name: "snapeth",
   leaderboard_data_file: "leaderboard.json"
 

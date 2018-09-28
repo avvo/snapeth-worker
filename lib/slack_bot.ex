@@ -69,7 +69,14 @@ defmodule Snapeth.SlackBot do
     end)
     |> Enum.join("\n")
 
-    send_message("Here is the weekly leaderboard for <@#{slack.me.id}> recipients!\n#{leaderboard}\nYou can give snaps via the Snapeth app!", channel, slack)
+    """
+    Here is the weekly leaderboard for <@#{slack.me.id}> recipients!
+    #{leaderboard}
+
+    You can give snaps via the Snapeth app!
+    This leaderboard resets every Monday at 2:01PM PST
+    """
+    |> send_message(channel, slack)
   end
 
   defp add_snap_reason(message, reason) do
