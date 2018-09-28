@@ -16,8 +16,18 @@ defmodule Snapeth.Storage do
     |> case do
       {:ok, %{body: body}} ->
         Poison.decode!(body)
+
+      {:error, {:http_error, 404, _}} ->
+        create_leaderboard_file()
+
       error ->
         Logger.error "Error loading leaderboard! #{inspect error}"
     end
+  end
+
+  def create_leaderboard_file() do
+    persist_leaderboard(%{})
+
+    %{}
   end
 end
