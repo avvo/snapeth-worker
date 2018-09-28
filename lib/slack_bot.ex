@@ -9,6 +9,8 @@ defmodule Snapeth.SlackBot do
       {~r/leaderboard/i, :leaderboard},
     ]
 
+  @snapeth_id "U6WK31RSL"
+
   ##########
   # CLIENT #
   ##########
@@ -41,7 +43,15 @@ defmodule Snapeth.SlackBot do
     state
   end
 
+  def snap(message = %{user: user}, slack, state, _user_id) when user == @snapeth_id do
+    "Snapeth appreciates the sentiment, but would prefer you snap your teammates instead!"
+    |> send_message(message.channel, slack)
+
+    state
+  end
+
   def snap(message, slack, state, user_id) do
+    IO.inspect(message)
     snap_reason = strip_mention(message.text, user_id)
 
     "Oh snapeth, you got a snap from <@#{message.user}>!"
@@ -79,15 +89,20 @@ defmodule Snapeth.SlackBot do
     |> send_message(channel, slack)
   end
 
+  defp add_snap_reason(message, nil), do: message
+
   defp add_snap_reason(message, reason) do
     message <> "\n_#{reason}_"
   end
 
   defp strip_mention(text, mentioned_user_id) do
     at_mention_length = String.length("<@#{mentioned_user_id}> ")
-    <<_at_mention::binary-size(at_mention_length), snap_reason::binary>> = text
-
-    snap_reason
+    case text do
+      <<_at_mention::binary-size(at_mention_length), snap_reason::binary>> ->
+        snap_reason
+      _ ->
+        nil
+    end
   end
 
   ##########

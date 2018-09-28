@@ -35,7 +35,7 @@ config :snapeth, Snapeth.Scheduler,
   timezone: "America/Los_Angeles"
 
 config :snapeth,
-  slack_bot_token: "${BOT_TOKEN}",
+  slack_bot_token: System.get_env("BOT_TOKEN") || "${BOT_TOKEN}",
   bucket_name: "snapeth",
   leaderboard_data_file: "leaderboard.json"
 
