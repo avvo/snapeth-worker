@@ -100,7 +100,7 @@ defmodule Snapeth.SlackBot do
 
   defp strip_mention(text, mentioned_user_id) do
     at_mention_length = String.length("<@#{mentioned_user_id}> ")
-    case text do
+    case String.trim(text) do
       <<_at_mention::binary-size(at_mention_length), snap_reason::binary>> ->
         snap_reason
       _ ->
