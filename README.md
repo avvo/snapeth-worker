@@ -22,3 +22,7 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/snapeth](https://hexdocs.pm/snapeth).
+
+## Possible Improvements
+
+We should be able to use slash commands (e.g. /snapeth [person] [props description]) if we follow steps [here] (https://bendyworks.com/blog/building-a-slackbot-in-elixir-part-1).

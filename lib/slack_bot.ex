@@ -57,7 +57,7 @@ defmodule Snapeth.SlackBot do
   end
 
   def display_leaderboard(slack, state, channel) when map_size(state) == 0 do
-    send_message("There have been no snaps today from <@#{slack.me.id}>.", channel, slack)
+    send_message("There have been no snaps this week from <@#{slack.me.id}>.", channel, slack)
   end
 
   def display_leaderboard(slack, state, channel) do
@@ -69,7 +69,7 @@ defmodule Snapeth.SlackBot do
     end)
     |> Enum.join("\n")
 
-    send_message("Here is the weekly leaderboard for <@#{slack.me.id}> recipients!\n#{leaderboard}", channel, slack)
+    send_message("Here is the weekly leaderboard for <@#{slack.me.id}> recipients!\n#{leaderboard}\nYou can give snaps via the Snapeth app!", channel, slack)
   end
 
   defp add_snap_reason(message, reason) do
