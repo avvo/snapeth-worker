@@ -47,7 +47,7 @@ defmodule Snapeth do
   end
 
   def handle_info(:work, state) do
-    send(state.slack, :weekly_leaderboard)
+    send(state.slack, :leaderboard)
     {:noreply, state}
   end
 

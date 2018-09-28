@@ -86,9 +86,16 @@ defmodule Snapeth.SlackBot do
   ##########
   # SERVER #
   ##########
-  def handle_connect(_, _state) do
+  def handle_connect(_, state) do
     IO.puts("Slack bot connected to team Avvo")
-    {:ok, %{}}
+
+    case state do
+      [] ->
+        {:ok, %{}}
+
+      _ ->
+        {:ok, state}
+    end
   end
 
   def handle_info(:barf_state, _slack, state) do
@@ -96,14 +103,18 @@ defmodule Snapeth.SlackBot do
     {:ok, state}
   end
 
+  def handle_info({:load_user, user_id, score}, _slack, []) do
+    {:ok, Map.put(%{}, user_id, score)}
+  end
+
   def handle_info({:load_user, user_id, score}, _slack, state) do
     {:ok, Map.put(state, user_id, score)}
   end
 
-  def handle_info(:weekly_leaderboard, slack, state) do
+  def handle_info(:leaderboard, slack, state) do
     display_leaderboard(slack, state, "#general")
 
-    # Currently we don't delete the leaderboard weekly.  It'll be a running total
+    # This is the leaderboard for all time
     {:ok, state}
   end
 
