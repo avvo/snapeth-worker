@@ -1,5 +1,7 @@
 defmodule Snapeth.SlackBot do
   use Slack
+  require Logger
+  alias Snapeth.Storage
 
   @message_types [
       {~r/help/i, :help},
@@ -89,9 +91,25 @@ defmodule Snapeth.SlackBot do
     {:ok, %{}}
   end
 
+  def handle_info(:barf_state, _slack, state) do
+    IO.inspect(state)
+    {:ok, state}
+  end
+
+  def handle_info({:load_user, user_id, score}, _slack, state) do
+    {:ok, Map.put(state, user_id, score)}
+  end
+
   def handle_info(:weekly_leaderboard, slack, state) do
     display_leaderboard(slack, state, "#general")
-    {:ok, %{}}
+
+    # Currently we don't delete the leaderboard weekly.  It'll be a running total
+    {:ok, state}
+  end
+
+  def handle_info(:persist_leaderboard, _slack, state) do
+    Storage.persist_leaderboard(state)
+    {:ok, state}
   end
 
   def handle_event(%{user: user}, %{me: %{id: id}}, state) when user == id do
@@ -105,6 +123,10 @@ defmodule Snapeth.SlackBot do
                          )
                          IO.inspect func
     state = Kernel.apply(Snapeth.SlackBot, func, [message, slack, state])
+
+    send(self(), :persist_leaderboard)
+    Logger.info("Persisted leaderboard")
+
     {:ok, state}
   end
 

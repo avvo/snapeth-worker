@@ -34,7 +34,14 @@ jobs: [
 timezone: "America/Los_Angeles"
 
 config :snapeth,
-  slack_bot_token: "${BOT_TOKEN}"
+  slack_bot_token: System.get_env("BOT_TOKEN") || "${BOT_TOKEN}",
+  bucket_name: "snapeth",
+  leaderboard_data_file: "leaderboard.json"
+
+config :ex_aws,
+  access_key_id: [{:system, "S3_KEY_ID"}, :instance_role],
+  secret_access_key: [{:system, "S3_SECRET"}, :instance_role],
+  region: "us-west-2"
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
