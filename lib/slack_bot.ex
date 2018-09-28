@@ -9,7 +9,8 @@ defmodule Snapeth.SlackBot do
       {~r/leaderboard/i, :leaderboard},
     ]
 
-  @snapeth_id "U6WK31RSL"
+  @snapeth_app_id "UD0V0C3Q8"
+  @snapeth_bot_id "UD1J0C43D"
 
   ##########
   # CLIENT #
@@ -43,7 +44,7 @@ defmodule Snapeth.SlackBot do
     state
   end
 
-  def snap(message = %{user: user}, slack, state, _user_id) when user == @snapeth_id do
+  def snap(message = %{user: user}, slack, state, user_id) when user_id == @snapeth_app_id or user_id == @snapeth_bot_id do
     "Snapeth appreciates the sentiment, but would prefer you snap your teammates instead!"
     |> send_message(message.channel, slack)
 
@@ -51,12 +52,14 @@ defmodule Snapeth.SlackBot do
   end
 
   def snap(message, slack, state, user_id) do
-    IO.inspect(message)
     snap_reason = strip_mention(message.text, user_id)
 
     "Oh snapeth, you got a snap from <@#{message.user}>!"
     |> add_snap_reason(snap_reason)
     |> send_message(user_id, slack)
+
+    ":party-corgi: Your snap was delivered!"
+    |> send_message(message.channel, slack)
 
     Map.update(state, user_id, 1, &(&1 + 1))
   end
