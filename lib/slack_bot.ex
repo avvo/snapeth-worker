@@ -137,7 +137,7 @@ defmodule Snapeth.SlackBot do
   end
 
   def handle_info(:weekly_leaderboard, slack, state) do
-    display_leaderboard(slack, state, "#snapeth-general")
+    display_leaderboard(slack, state, Application.get_env(:snapeth, :slack_channel))
 
     {:ok, state}
   end

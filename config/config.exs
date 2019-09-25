@@ -37,7 +37,8 @@ config :snapeth, Snapeth.Scheduler,
 config :snapeth,
   slack_bot_token: System.get_env("BOT_TOKEN") || "${BOT_TOKEN}",
   bucket_name: "snapeth",
-  leaderboard_data_file: "leaderboard.json"
+  leaderboard_data_file: "leaderboard.json",
+  slack_channel: System.get_env("SLACK_CHANNEL") || "#general"
 
 config :ex_aws,
   access_key_id: [{:system, "S3_KEY_ID"}, :instance_role],
