@@ -23,6 +23,17 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/snapeth](https://hexdocs.pm/snapeth).
 
+## Development
+
+- Clone the repository
+- Install dependancies with `mix deps.get`
+- Create an .env file with the following three keys:
+	+ BOT_TOKEN
+	+ S3_KEY_ID
+	+ S3_SECRET
+- Run in the Elixer REPL with  `iex -S mix`
+- In the REPL it is possible to run functions from `snapeth.ex` such as `Snapeth.display_leaderboard`
+
 ## Possible Improvements
 
 We should be able to use slash commands (e.g. /snapeth [person] [props description]) if we follow steps [here] (https://bendyworks.com/blog/building-a-slackbot-in-elixir-part-1).
