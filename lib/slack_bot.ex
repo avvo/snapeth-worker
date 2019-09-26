@@ -33,10 +33,35 @@ defmodule Snapeth.SlackBot do
   end
 
   def snap(message, slack, state) do
-    [_, channel, user_id] =
-      Regex.run(~r/(?=.*(#[\w_-]+|:public))*(?=.*<@(\w+)>)*.+/i, message.text)
+    splitted_string = String.split(message.text, " ")
 
+    [user_id | rest] = splitted_string
+    [last_word | reversed_message] = Enum.reverse(rest)
+    channel = channel_name(last_word)
+
+    message_body =
+      case channel do
+        "" -> rest
+        _ -> Enum.reverse(reversed_message)
+      end
+      |> Enum.join(" ")
+
+    message = Map.put(message, :text, message_body)
     snap(message, slack, state, user_id, channel)
+  end
+
+  defp channel_name(":public:") do
+    "#snapeth-general"
+  end
+
+  defp channel_name("<#"<>_channel_name = ch) do
+    [_, ch_name] = String.split(ch, "|")
+    ">"<>new_ch_name = String.reverse(ch_name)
+    "#"<>String.reverse(new_ch_name)
+  end
+
+  defp channel_name(_word) do
+    ""
   end
 
   def snap(message = %{user: user}, slack, state, user_id, _channel) when user_id == user do
@@ -74,14 +99,14 @@ defmodule Snapeth.SlackBot do
   end
 
   # :public (#general channel)
-  def snap(message, slack, state, user_id, ":public") do
-    snap(message, slack, state, user_id, "#general")
+  def snap(message, slack, state, user_id, ":public:") do
+    snap(message, slack, state, user_id, "#snapeth-general")
   end
 
   def snap(message, slack, state, user_id, channel) do
     snap_reason = strip_mention(message.text)
 
-    "Oh snapeth, <@#{user_id}> got a snap!"
+    "Oh snapeth, #{user_id} got a snap!"
     |> add_snap_reason(snap_reason)
     |> send_message(channel, slack)
 
@@ -125,7 +150,7 @@ defmodule Snapeth.SlackBot do
   end
 
   defp strip_mention(text) do
-    String.replace(text, ~r/#\w+|:public|<@\w+>/, "")
+    String.replace(text, ~r/#[\w_-]+|:public:|<\w+>/, "")
   end
 
   ##########
@@ -144,7 +169,6 @@ defmodule Snapeth.SlackBot do
   end
 
   def handle_info(:barf_state, _slack, state) do
-    IO.inspect(state)
     {:ok, state}
   end
 
@@ -157,7 +181,7 @@ defmodule Snapeth.SlackBot do
   end
 
   def handle_info(:weekly_leaderboard, slack, state) do
-    display_leaderboard(slack, state, "#general")
+    display_leaderboard(slack, state, "#snapeth-general")
 
     {:ok, state}
   end
@@ -183,7 +207,6 @@ defmodule Snapeth.SlackBot do
         fn {reg, _} -> String.match?(message.text, reg) end
       )
 
-    IO.inspect(func)
     state = Kernel.apply(Snapeth.SlackBot, func, [message, slack, state])
 
     send(self(), :persist_leaderboard)
