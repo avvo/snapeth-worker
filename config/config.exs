@@ -28,8 +28,8 @@ config :snapeth, Snapeth.Scheduler,
   jobs: [
     # Every Monday at 2:00
     {"0 14 * * MON",      {Snapeth, :display_leaderboard, []}},
-    # Every Monday at 2:01
-    {"1 14 * * MON",      {Snapeth, :clear_leaderboard, []}},
+    # Every year
+    {"0 0 1 1 *",         {Snapeth, :clear_leaderboard, []}},
     #
   ],
   timezone: "America/Los_Angeles"
@@ -37,7 +37,6 @@ config :snapeth, Snapeth.Scheduler,
 config :snapeth,
   slack_bot_token: System.get_env("BOT_TOKEN") || "${BOT_TOKEN}",
   bucket_name: "snapeth",
-  leaderboard_data_file: "leaderboard.json",
   slack_channel: System.get_env("SLACK_CHANNEL") || "#general"
 
 config :ex_aws,

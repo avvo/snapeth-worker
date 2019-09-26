@@ -36,7 +36,7 @@ defmodule Worker.MixProject do
       {:poison, "~> 3.0"},
       {:quantum, "~> 2.3"},
       {:slack, "~> 0.15"},
-      {:timex, "~> 3.4.1"},
+      {:timex, "~> 3.4.1"}
     ]
   end
 end

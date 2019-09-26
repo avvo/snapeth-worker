@@ -27,10 +27,7 @@ be found at [https://hexdocs.pm/snapeth](https://hexdocs.pm/snapeth).
 
 - Clone the repository
 - Install dependancies with `mix deps.get`
-- Create an .env file with the following three keys:
-	+ BOT_TOKEN
-	+ S3_KEY_ID
-	+ S3_SECRET
+- Create an .env file, reference `config/config.exs` for specific keys
 - Run in the Elixer REPL with  `iex -S mix`
 - In the REPL it is possible to run functions from `snapeth.ex` such as `Snapeth.display_leaderboard`
 
