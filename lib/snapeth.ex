@@ -16,7 +16,6 @@ defmodule Snapeth do
     send(SnapethMain, :clear_leaderboard)
   end
 
-
   ##########
   # SERVER #
   ##########
@@ -33,20 +32,22 @@ defmodule Snapeth do
   end
 
   def init(_team_id) do
-    Logger.info("Running with token #{inspect Application.get_env(:snapeth, :slack_bot_token)}")
+    Logger.info("Running with token #{inspect(Application.get_env(:snapeth, :slack_bot_token))}")
 
-    {:ok, pid} = Slack.Bot.start_link(
-      Snapeth.SlackBot,
-      [],
-      Application.get_env(:snapeth, :slack_bot_token)
-    )
+    {:ok, pid} =
+      Slack.Bot.start_link(
+        Snapeth.SlackBot,
+        [],
+        Application.get_env(:snapeth, :slack_bot_token)
+      )
 
     Logger.info("Loading leaderboard...")
+
     Storage.fetch_leaderboard()
     |> load_leaderboard(pid)
     |> (fn users_loaded ->
-      Logger.info("Loaded standings for #{inspect users_loaded} users")
-    end).()
+          Logger.info("Loaded standings for #{inspect(users_loaded)} users")
+        end).()
 
     {:ok, %{slack: pid}}
   end
@@ -77,5 +78,4 @@ defmodule Snapeth do
 
     Map.keys(users) |> length
   end
-
 end
