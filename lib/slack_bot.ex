@@ -126,12 +126,13 @@ defmodule Snapeth.SlackBot do
   end
 
   def display_leaderboard(slack, state, channel) do
-    leaderboard =
-      state
-      |> Enum.sort_by(fn {_user, count} -> count end, &>=/2)
-      |> Enum.reduce(fn {user, snap_count}, board ->
-        "#{board} \n <@#{user}> received #{snap_count}!"
-      end)
+    leaderboard = state
+    |> Enum.sort_by(&(elem(&1, 1)))
+    |> Enum.reverse()
+    |> Enum.map(fn {user, snap_count} ->
+      "<@#{user}> received #{snap_count}!"
+    end)
+    |> Enum.join("\n")
 
     """
     Here is the weekly leaderboard for <@#{slack.me.id}> recipients!
