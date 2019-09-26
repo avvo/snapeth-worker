@@ -23,6 +23,6 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 snapeth-*.tar
-
+.elixir_ls
 # Ignore environmental secrets
 *.env

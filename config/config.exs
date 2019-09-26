@@ -29,8 +29,7 @@ config :snapeth, Snapeth.Scheduler,
     # Every Monday at 2:00
     {"0 14 * * MON",      {Snapeth, :display_leaderboard, []}},
     # Every year
-    {"0 0 1 1 *",         {Snapeth, :clear_leaderboard, []}},
-    #
+    {"0 0 1 1 *",         {Snapeth, :clear_leaderboard, []}}
   ],
   timezone: "America/Los_Angeles"
 

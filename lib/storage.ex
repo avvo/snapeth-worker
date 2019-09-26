@@ -12,7 +12,8 @@ defmodule Snapeth.Storage do
     |> ExAws.S3.put_object(
       leaderboard_filename,
       Poison.encode!(state)
-    ) |> ExAws.request()
+    )
+    |> ExAws.request()
   end
 
   def fetch_leaderboard() do
@@ -27,7 +28,7 @@ defmodule Snapeth.Storage do
         create_leaderboard_file()
 
       error ->
-        Logger.error "Error loading leaderboard! #{inspect error}"
+        Logger.error("Error loading leaderboard! #{inspect(error)}")
     end
   end
 
