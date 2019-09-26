@@ -16,7 +16,7 @@ defmodule Snapeth.SlackBot do
   # CLIENT #
   ##########
   def help(message, slack, state) do
-    """
+    help_message = """
     Have you seen someone demonstrate a positive and inclusive behavior at work?
     Tag that teammate here to give them an appreciative snap!
 
@@ -26,39 +26,64 @@ defmodule Snapeth.SlackBot do
     _or_
     >@slackbot I appreciate you always considering accessibility when developing features.
     """
-    |> send_message(message.channel, slack)
+
+    send_message(help_message, message.channel, slack)
 
     state
   end
 
   def snap(message, slack, state) do
-    [_, user_id] = Regex.run(~r/^<@(\w+)>/, message.text)
-    snap(message, slack, state, user_id)
+    [_, channel, user_id] =
+      Regex.run(~r/(?=.*(#[\w_-]+|:public))*(?=.*<@(\w+)>)*.+/i, message.text)
+
+    snap(message, slack, state, user_id, channel)
   end
 
-  def snap(message = %{user: user}, slack, state, user_id) when user_id == user do
-    ("You can't snap yourself, but this is an opportunity " <>
-       "to talk with your teammates about inclusive behaviors " <>
-       "and being proactive with their snaps!")
-    |> send_message(message.channel, slack)
+  def snap(message = %{user: user}, slack, state, user_id, _channel) when user_id == user do
+    message_text = """
+    You can't snap yourself, but this is an opportunity
+    to talk with your teammates about inclusive behaviors
+    and being proactive with their snaps!
+    """
+
+    send_message(message_text, message.channel, slack)
 
     state
   end
 
-  def snap(message = %{user: user}, slack, state, user_id)
-      when user_id == @snapeth_app_id or user_id == @snapeth_bot_id do
+  def snap(message, slack, state, user_id, _channel)
+      when user_id in [@snapeth_app_id, @snapeth_bot_id] do
     "Snapeth appreciates the sentiment, but would prefer you snap your teammates instead!"
     |> send_message(message.channel, slack)
 
     state
   end
 
-  def snap(message, slack, state, user_id) do
-    snap_reason = strip_mention(message.text, user_id)
+  # private (channel is empty)
+  def snap(message, slack, state, user_id, "") do
+    snap_reason = strip_mention(message.text)
 
     "Oh snapeth, you got a snap from <@#{message.user}>!"
     |> add_snap_reason(snap_reason)
     |> send_message(user_id, slack)
+
+    ":party-corgi: Your snap was delivered!"
+    |> send_message(message.channel, slack)
+
+    Map.update(state, user_id, 1, &(&1 + 1))
+  end
+
+  # :public (#general channel)
+  def snap(message, slack, state, user_id, ":public") do
+    snap(message, slack, state, user_id, "#general")
+  end
+
+  def snap(message, slack, state, user_id, channel) do
+    snap_reason = strip_mention(message.text)
+
+    "Oh snapeth, <@#{user_id}> got a snap!"
+    |> add_snap_reason(snap_reason)
+    |> send_message(channel, slack)
 
     ":party-corgi: Your snap was delivered!"
     |> send_message(message.channel, slack)
@@ -78,12 +103,10 @@ defmodule Snapeth.SlackBot do
   def display_leaderboard(slack, state, channel) do
     leaderboard =
       state
-      |> Enum.sort_by(&elem(&1, 1))
-      |> Enum.reverse()
-      |> Enum.map(fn {user, snap_count} ->
-        "<@#{user}> received #{snap_count}!"
+      |> Enum.sort_by(fn {_user, count} -> count end, &>=/2)
+      |> Enum.reduce(fn {user, snap_count}, board ->
+        "#{board} \n <@#{user}> received #{snap_count}!"
       end)
-      |> Enum.join("\n")
 
     """
     Here is the weekly leaderboard for <@#{slack.me.id}> recipients!
@@ -101,16 +124,8 @@ defmodule Snapeth.SlackBot do
     message <> "\n_#{reason}_"
   end
 
-  defp strip_mention(text, mentioned_user_id) do
-    at_mention_length = String.length("<@#{mentioned_user_id}> ")
-
-    case String.trim(text) do
-      <<_at_mention::binary-size(at_mention_length), snap_reason::binary>> ->
-        snap_reason
-
-      _ ->
-        nil
-    end
+  defp strip_mention(text) do
+    String.replace(text, ~r/#\w+|:public|<@\w+>/, "")
   end
 
   ##########
