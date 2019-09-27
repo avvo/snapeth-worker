@@ -3,8 +3,8 @@ defmodule Snapeth.Storage do
   use Timex
 
   def leaderboard_filename() do
-    now = Timex.iso_week(Timex.today)
-    "#{elem(now,1)}-leaderboard.json"
+    now = Timex.iso_week(Timex.today())
+    "#{elem(now, 1)}-leaderboard.json"
   end
 
   def persist_leaderboard(state) do

@@ -17,14 +17,24 @@ defmodule Snapeth.SlackBot do
   ##########
   def help(message, slack, state) do
     help_message = """
-    Have you seen someone demonstrate a positive and inclusive behavior at work?
-    Tag that teammate here to give them an appreciative snap!
+      Have you seen someone demonstrate a positive and inclusive behavior at work?
+      Tag that teammate here to give them an appreciative snap!
 
-    For example:
+      For example:
 
-    >@slackbot
-    _or_
-    >@slackbot I appreciate you always considering accessibility when developing features.
+      Sending snapeth without a message
+      >@slack_name
+      _or_
+      Sending snapeth with a message
+      >@slack_name "awesome message"
+      _or_
+      Sending snapeth with a public message posted to #general channel
+      >@slack_name "awesome message" :public
+      _or_
+      Sending snapeth with a public message posted to #channel of your choice
+      >@slack_name "awesome message" #channel_name
+
+      Please find more information on how to give snapeth here: https://tinyurl.com/snapeth
     """
 
     send_message(help_message, message.channel, slack)
@@ -54,10 +64,10 @@ defmodule Snapeth.SlackBot do
     "#snapeth-general"
   end
 
-  defp channel_name("<#"<>_channel_name = ch) do
+  defp channel_name("<#" <> _channel_name = ch) do
     [_, ch_name] = String.split(ch, "|")
-    ">"<>new_ch_name = String.reverse(ch_name)
-    "#"<>String.reverse(new_ch_name)
+    ">" <> new_ch_name = String.reverse(ch_name)
+    "#" <> String.reverse(new_ch_name)
   end
 
   defp channel_name(_word) do
@@ -87,6 +97,7 @@ defmodule Snapeth.SlackBot do
   # private (channel is empty)
   def snap(message, slack, state, user_id, "") do
     snap_reason = strip_mention(message.text)
+    [_, user_id] = Regex.run(~r/^<@(\w+)>/, user_id)
 
     "Oh snapeth, you got a snap from <@#{message.user}>!"
     |> add_snap_reason(snap_reason)
@@ -106,7 +117,10 @@ defmodule Snapeth.SlackBot do
   def snap(message, slack, state, user_id, channel) do
     snap_reason = strip_mention(message.text)
 
-    "Oh snapeth, #{user_id} got a snap!"
+    """
+    Oh snapeth, #{user_id} got a snap!
+    Please find more information on how to give snapeth here: https://tinyurl.com/snapeth
+    """
     |> add_snap_reason(snap_reason)
     |> send_message(channel, slack)
 
@@ -126,13 +140,14 @@ defmodule Snapeth.SlackBot do
   end
 
   def display_leaderboard(slack, state, channel) do
-    leaderboard = state
-    |> Enum.sort_by(&(elem(&1, 1)))
-    |> Enum.reverse()
-    |> Enum.map(fn {user, snap_count} ->
-      "<@#{user}> received #{snap_count}!"
-    end)
-    |> Enum.join("\n")
+    leaderboard =
+      state
+      |> Enum.sort_by(&elem(&1, 1))
+      |> Enum.reverse()
+      |> Enum.map(fn {user, snap_count} ->
+        "<@#{user}> received #{snap_count}!"
+      end)
+      |> Enum.join("\n")
 
     """
     Here is the weekly leaderboard for <@#{slack.me.id}> recipients!
