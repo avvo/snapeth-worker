@@ -22,10 +22,10 @@ defmodule Snapeth.SlackBot do
 
       For example:
 
-      Sending snapeth without a message
+      Sending snapeth with a private message
       >@slack_name
       _or_
-      Sending snapeth with a message
+      Sending snapeth with a private message
       >@slack_name "awesome message"
       _or_
       Sending snapeth with a public message posted to #general channel
