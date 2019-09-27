@@ -154,6 +154,7 @@ defmodule Snapeth.SlackBot do
     #{leaderboard}
 
     You can give snaps via the Snapeth app!
+    Please find more information on how to give snapeth here: https://tinyurl.com/snapeth
     This leaderboard resets every Monday at 2:01PM PST.
     """
     |> send_message(channel, slack)
