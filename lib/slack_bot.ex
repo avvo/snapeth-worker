@@ -116,7 +116,6 @@ defmodule Snapeth.SlackBot do
 
   def snap(message, slack, state, user_id, channel) do
     snap_reason = strip_mention(message.text)
-    [_, user_id] = Regex.run(~r/^<@(\w+)>/, user_id)
 
     """
     Oh snapeth, #{user_id} got a snap!
@@ -128,6 +127,7 @@ defmodule Snapeth.SlackBot do
     ":party-corgi: Your snap was delivered!"
     |> send_message(message.channel, slack)
 
+    [_, user_id] = Regex.run(~r/^<@(\w+)>/, user_id)
     Map.update(state, user_id, 1, &(&1 + 1))
   end
 
